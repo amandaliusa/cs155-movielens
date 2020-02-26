@@ -644,7 +644,7 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
     { \hspace*{\fill} \\}
     
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}153}]:} \PY{c+c1}{\PYZsh{} train using best lambda}
+{\color{incolor}In [{\color{incolor}184}]:} \PY{c+c1}{\PYZsh{} train using best lambda}
           \PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{e\PYZus{}in}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b} \PY{o}{=} \PY{n}{train\PYZus{}model}\PY{p}{(}\PY{n}{M}\PY{p}{,} \PY{n}{N}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{eta}\PY{p}{,} \PY{l+m+mf}{0.1}\PY{p}{,} \PY{n}{Y\PYZus{}train}\PY{p}{,} \PY{n}{mu}\PY{p}{)}
           \PY{n}{e\PYZus{}out} \PY{o}{=} \PY{n}{get\PYZus{}err}\PY{p}{(}\PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{Y\PYZus{}test}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{mu}\PY{p}{)}
           
@@ -691,20 +691,27 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
 33
 34
 35
+36
+37
+38
+39
+40
+41
+42
 
     \end{Verbatim}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}154}]:} \PY{n}{e\PYZus{}out}
+{\color{incolor}In [{\color{incolor}185}]:} \PY{n}{e\PYZus{}out}
 \end{Verbatim}
 
 
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}154}]:} array([0.41961742])
+{\color{outcolor}Out[{\color{outcolor}185}]:} array([0.41803639])
 \end{Verbatim}
             
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}155}]:} \PY{c+c1}{\PYZsh{} mean\PYZhy{}centering }
+{\color{incolor}In [{\color{incolor}186}]:} \PY{c+c1}{\PYZsh{} mean\PYZhy{}centering }
           \PY{n}{V\PYZus{}mean} \PY{o}{=} \PY{n}{V}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
           \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:}
               \PY{n}{V}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{i}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{V\PYZus{}mean}
@@ -717,7 +724,7 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}156}]:} \PY{c+c1}{\PYZsh{} project U, V into K\PYZhy{}dimensional space}
+{\color{incolor}In [{\color{incolor}187}]:} \PY{c+c1}{\PYZsh{} project U, V into K\PYZhy{}dimensional space}
           \PY{n}{K} \PY{o}{=} \PY{l+m+mi}{2}
           \PY{n}{U\PYZus{}tilde} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matmul}\PY{p}{(}\PY{n}{A}\PY{o}{.}\PY{n}{T}\PY{p}{[}\PY{p}{:}\PY{n}{K}\PY{p}{]}\PY{p}{,} \PY{n}{U}\PY{p}{)}
           \PY{n}{V\PYZus{}tilde} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matmul}\PY{p}{(}\PY{n}{A}\PY{o}{.}\PY{n}{T}\PY{p}{[}\PY{p}{:}\PY{n}{K}\PY{p}{]}\PY{p}{,} \PY{n}{V}\PY{p}{)}
@@ -725,14 +732,14 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}157}]:} \PY{c+c1}{\PYZsh{} load data from cleaned files}
+{\color{incolor}In [{\color{incolor}188}]:} \PY{c+c1}{\PYZsh{} load data from cleaned files}
           \PY{n}{movies} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{data/movies.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
           \PY{n}{data} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{data/data.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}170}]:} \PY{c+c1}{\PYZsh{} visualize any 10 movies}
+{\color{incolor}In [{\color{incolor}189}]:} \PY{c+c1}{\PYZsh{} visualize any 10 movies}
           \PY{n}{ids} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{11}\PY{p}{,} \PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{71}\PY{p}{,} \PY{l+m+mi}{95}\PY{p}{,} \PY{l+m+mi}{98}\PY{p}{,} \PY{l+m+mi}{92}\PY{p}{,} \PY{l+m+mi}{578}\PY{p}{,} \PY{l+m+mi}{181}\PY{p}{,} \PY{l+m+mi}{172}\PY{p}{,} \PY{l+m+mi}{50}\PY{p}{]}
           
           \PY{n}{titles} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Seven}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Usual Suspects}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Lion King}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aladdin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Silence of the Lambs}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{True Romance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Piano}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Return of the Jedi}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Empire Strikes Back}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Star Wars}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}   
@@ -762,11 +769,11 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
     { \hspace*{\fill} \\}
     
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}171}]:} \PY{c+c1}{\PYZsh{} run k\PYZhy{}means to cluster points}
+{\color{incolor}In [{\color{incolor}191}]:} \PY{c+c1}{\PYZsh{} run k\PYZhy{}means to cluster points}
           \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{cluster} \PY{k}{import} \PY{n}{KMeans}
           
           \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{column\PYZus{}stack}\PY{p}{(}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)}
-          \PY{n}{labels} \PY{o}{=} \PY{n}{KMeans}\PY{p}{(}\PY{n}{n\PYZus{}clusters}\PY{o}{=}\PY{l+m+mi}{4}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{fit\PYZus{}predict}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+          \PY{n}{labels} \PY{o}{=} \PY{n}{KMeans}\PY{p}{(}\PY{n}{n\PYZus{}clusters}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{fit\PYZus{}predict}\PY{p}{(}\PY{n}{X}\PY{p}{)}
           
           \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
           \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{labels}\PY{p}{)}
@@ -787,7 +794,7 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
     { \hspace*{\fill} \\}
     
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}172}]:} \PY{c+c1}{\PYZsh{} visualize 10 most popular movies}
+{\color{incolor}In [{\color{incolor}192}]:} \PY{c+c1}{\PYZsh{} visualize 10 most popular movies}
           \PY{n}{pop} \PY{o}{=} \PY{n}{data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Movie}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{o}{.}\PY{n}{index}
           
           \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{pop}\PY{p}{:}
@@ -803,7 +810,7 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
           
           \PY{c+c1}{\PYZsh{} clustering}
           \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{column\PYZus{}stack}\PY{p}{(}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)}
-          \PY{n}{labels} \PY{o}{=} \PY{n}{KMeans}\PY{p}{(}\PY{n}{n\PYZus{}clusters}\PY{o}{=}\PY{l+m+mi}{4}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{fit\PYZus{}predict}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+          \PY{n}{labels} \PY{o}{=} \PY{n}{KMeans}\PY{p}{(}\PY{n}{n\PYZus{}clusters}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{fit\PYZus{}predict}\PY{p}{(}\PY{n}{X}\PY{p}{)}
           
           \PY{c+c1}{\PYZsh{} plot visualization}
           \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
