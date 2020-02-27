@@ -141,7 +141,7 @@
     \def\gt{>}
     \def\lt{<}
     % Document parameters
-    \title{matrix\_factorizations\_1}
+    \title{matrix\_factorizations\_2}
     
     
     
@@ -280,9 +280,9 @@
     
 
     
-    \section{Matrix Factorization Visualizations - Method 1 (Code from
-Homework
-5)}\label{matrix-factorization-visualizations---method-1-code-from-homework-5}
+    \section{Matrix Factorization Visualizations - Method 2 (Code Modified
+from Homework
+5)}\label{matrix-factorization-visualizations---method-2-code-modified-from-homework-5}
 
 Starter code written by: Fabian Boemer, Sid Murching, Suraj Nair, Alex
 Cui
@@ -295,59 +295,92 @@ Cui
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}2}]:} \PY{k}{def} \PY{n+nf}{grad\PYZus{}U}\PY{p}{(}\PY{n}{Ui}\PY{p}{,} \PY{n}{Yij}\PY{p}{,} \PY{n}{Vj}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{eta}\PY{p}{)}\PY{p}{:}
+{\color{incolor}In [{\color{incolor}2}]:} \PY{k}{def} \PY{n+nf}{grad\PYZus{}U}\PY{p}{(}\PY{n}{Ui}\PY{p}{,} \PY{n}{Yij}\PY{p}{,} \PY{n}{Vj}\PY{p}{,} \PY{n}{mu}\PY{p}{,} \PY{n}{ai}\PY{p}{,} \PY{n}{bj}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{eta}\PY{p}{)}\PY{p}{:}
             \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
         \PY{l+s+sd}{    Takes as input Ui (the ith row of U), a training point Yij, the column}
-        \PY{l+s+sd}{    vector Vj (jth column of V\PYZca{}T), reg (the regularization parameter lambda),}
-        \PY{l+s+sd}{    and eta (the learning rate).}
+        \PY{l+s+sd}{    vector Vj (jth column of V\PYZca{}T), the average of all observations mu, }
+        \PY{l+s+sd}{    ai (the ith entry of a), bj (the jth entry of b), }
+        \PY{l+s+sd}{    reg (the regularization parameter lambda), and eta (the learning rate).}
         
         \PY{l+s+sd}{    Returns the gradient of the regularized loss function with}
         \PY{l+s+sd}{    respect to Ui multiplied by eta.}
         \PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
             
-            \PY{n}{grad} \PY{o}{=} \PY{n}{reg}\PY{o}{*}\PY{n}{Ui} \PY{o}{\PYZhy{}} \PY{n}{Vj}\PY{o}{*}\PY{p}{(}\PY{n}{Yij} \PY{o}{\PYZhy{}} \PY{n}{np}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{Ui}\PY{p}{,} \PY{n}{Vj}\PY{p}{)}\PY{p}{)}
+            \PY{n}{grad} \PY{o}{=} \PY{n}{reg}\PY{o}{*}\PY{n}{Ui} \PY{o}{\PYZhy{}} \PY{n}{Vj}\PY{o}{*}\PY{p}{(}\PY{p}{(}\PY{n}{Yij} \PY{o}{\PYZhy{}} \PY{n}{mu}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{Ui}\PY{p}{,} \PY{n}{Vj}\PY{p}{)} \PY{o}{+} \PY{n}{ai} \PY{o}{+} \PY{n}{bj}\PY{p}{)}\PY{p}{)}
             
             \PY{k}{return} \PY{n}{eta}\PY{o}{*}\PY{n}{grad}   
         
-        \PY{k}{def} \PY{n+nf}{grad\PYZus{}V}\PY{p}{(}\PY{n}{Vj}\PY{p}{,} \PY{n}{Yij}\PY{p}{,} \PY{n}{Ui}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{eta}\PY{p}{)}\PY{p}{:}
+        \PY{k}{def} \PY{n+nf}{grad\PYZus{}V}\PY{p}{(}\PY{n}{Vj}\PY{p}{,} \PY{n}{Yij}\PY{p}{,} \PY{n}{Ui}\PY{p}{,} \PY{n}{mu}\PY{p}{,} \PY{n}{ai}\PY{p}{,} \PY{n}{bj}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{eta}\PY{p}{)}\PY{p}{:}
             \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
         \PY{l+s+sd}{    Takes as input the column vector Vj (jth column of V\PYZca{}T), a training point Yij,}
-        \PY{l+s+sd}{    Ui (the ith row of U), reg (the regularization parameter lambda),}
-        \PY{l+s+sd}{    and eta (the learning rate).}
+        \PY{l+s+sd}{    the average of all observations mu, ai (the ith entry of a), }
+        \PY{l+s+sd}{    bj (the jth entry of b), Ui (the ith row of U), }
+        \PY{l+s+sd}{    reg (the regularization parameter lambda), and eta (the learning rate).}
         
         \PY{l+s+sd}{    Returns the gradient of the regularized loss function with}
         \PY{l+s+sd}{    respect to Vj multiplied by eta.}
         \PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
             
-            \PY{n}{grad} \PY{o}{=} \PY{n}{reg}\PY{o}{*}\PY{n}{Vj} \PY{o}{\PYZhy{}} \PY{n}{Ui}\PY{o}{*}\PY{p}{(}\PY{n}{Yij} \PY{o}{\PYZhy{}} \PY{n}{np}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{Ui}\PY{p}{,} \PY{n}{Vj}\PY{p}{)}\PY{p}{)}
+            \PY{n}{grad} \PY{o}{=} \PY{n}{reg}\PY{o}{*}\PY{n}{Vj} \PY{o}{\PYZhy{}} \PY{n}{Ui}\PY{o}{*}\PY{p}{(}\PY{p}{(}\PY{n}{Yij} \PY{o}{\PYZhy{}} \PY{n}{mu}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{Ui}\PY{p}{,} \PY{n}{Vj}\PY{p}{)} \PY{o}{+} \PY{n}{ai} \PY{o}{+} \PY{n}{bj}\PY{p}{)}\PY{p}{)}
             
             \PY{k}{return} \PY{n}{eta}\PY{o}{*}\PY{n}{grad}  
         
-        \PY{k}{def} \PY{n+nf}{get\PYZus{}err}\PY{p}{(}\PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{reg}\PY{o}{=}\PY{l+m+mf}{0.0}\PY{p}{)}\PY{p}{:}
+        \PY{k}{def} \PY{n+nf}{grad\PYZus{}a}\PY{p}{(}\PY{n}{ai}\PY{p}{,} \PY{n}{Yij}\PY{p}{,} \PY{n}{mu}\PY{p}{,} \PY{n}{Ui}\PY{p}{,} \PY{n}{Vj}\PY{p}{,} \PY{n}{bj}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{eta}\PY{p}{)}\PY{p}{:}
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{l+s+sd}{    Takes as input ai (the ith entry of a), a training point Yij, }
+        \PY{l+s+sd}{    Ui (the ith row of U), the average of all observations mu, }
+        \PY{l+s+sd}{    the column vector Vj (jth column of V\PYZca{}T), bj (the jth entry of b),}
+        \PY{l+s+sd}{    reg (the regularization parameter lambda), and eta (the learning rate).}
+        
+        \PY{l+s+sd}{    Returns the gradient of the regularized loss function with}
+        \PY{l+s+sd}{    respect to ai multiplied by eta.}
+        \PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+            
+            \PY{n}{grad} \PY{o}{=} \PY{n}{reg}\PY{o}{*}\PY{n}{ai} \PY{o}{\PYZhy{}} \PY{p}{(}\PY{n}{Yij} \PY{o}{\PYZhy{}} \PY{n}{mu}\PY{p}{)} \PY{o}{+} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{Ui}\PY{p}{,} \PY{n}{Vj}\PY{p}{)} \PY{o}{+} \PY{n}{ai} \PY{o}{+} \PY{n}{bj}\PY{p}{)}
+            
+            \PY{k}{return} \PY{n}{eta}\PY{o}{*}\PY{n}{grad}
+        
+        \PY{k}{def} \PY{n+nf}{grad\PYZus{}b}\PY{p}{(}\PY{n}{bj}\PY{p}{,} \PY{n}{Yij}\PY{p}{,} \PY{n}{mu}\PY{p}{,} \PY{n}{Ui}\PY{p}{,} \PY{n}{Vj}\PY{p}{,} \PY{n}{ai}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{eta}\PY{p}{)}\PY{p}{:}
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{l+s+sd}{    Takes as input bj (the jth entry of b), a training point Yij, }
+        \PY{l+s+sd}{    Ui (the ith row of U), the average of all observations mu, }
+        \PY{l+s+sd}{    the column vector Vj (jth column of V\PYZca{}T), ai (the ith entry of a),}
+        \PY{l+s+sd}{    reg (the regularization parameter lambda), and eta (the learning rate).}
+        
+        \PY{l+s+sd}{    Returns the gradient of the regularized loss function with}
+        \PY{l+s+sd}{    respect to bj multiplied by eta.}
+        \PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+            
+            \PY{n}{grad} \PY{o}{=} \PY{n}{reg}\PY{o}{*}\PY{n}{bj} \PY{o}{\PYZhy{}} \PY{p}{(}\PY{n}{Yij} \PY{o}{\PYZhy{}} \PY{n}{mu}\PY{p}{)} \PY{o}{+} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{Ui}\PY{p}{,} \PY{n}{Vj}\PY{p}{)} \PY{o}{+} \PY{n}{ai} \PY{o}{+} \PY{n}{bj}\PY{p}{)}
+            
+            \PY{k}{return} \PY{n}{eta}\PY{o}{*}\PY{n}{grad}
+        
+        \PY{k}{def} \PY{n+nf}{get\PYZus{}err}\PY{p}{(}\PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{mu}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{reg}\PY{o}{=}\PY{l+m+mf}{0.0}\PY{p}{)}\PY{p}{:}
             \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
         \PY{l+s+sd}{    Takes as input a matrix Y of triples (i, j, Y\PYZus{}ij) where i is the index of a user,}
-        \PY{l+s+sd}{    j is the index of a movie, and Y\PYZus{}ij is user i\PYZsq{}s rating of movie j and}
-        \PY{l+s+sd}{    user/movie matrices U and V.}
+        \PY{l+s+sd}{    j is the index of a movie, and Y\PYZus{}ij is user i\PYZsq{}s rating of movie j;}
+        \PY{l+s+sd}{    user/movie matrices U and V; bias vectors a and b; }
+        \PY{l+s+sd}{    and mu, the average of all observations.}
         
         \PY{l+s+sd}{    Returns the mean regularized squared\PYZhy{}error of predictions made by}
         \PY{l+s+sd}{    estimating Y\PYZus{}\PYZob{}ij\PYZcb{} as the dot product of the ith row of U and the jth column of V\PYZca{}T.}
         \PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
                 
-            \PY{n}{error} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{n}{reg}\PY{o}{*}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{U}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fro}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{+} \PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{V}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fro}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}
+            \PY{n}{error} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{n}{reg}\PY{o}{*}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{U}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fro}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{+} \PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{V}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fro}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{+} \PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{a}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{+} \PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{b}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}
         
             \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{Y}\PY{p}{)}\PY{p}{)}\PY{p}{:}
                 \PY{n}{Yij} \PY{o}{=} \PY{n}{Y}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}
                 \PY{n}{i} \PY{o}{=} \PY{n}{Y}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}
                 \PY{n}{j} \PY{o}{=} \PY{n}{Y}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}
-                \PY{n}{error} \PY{o}{+}\PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{n}{Yij} \PY{o}{\PYZhy{}} \PY{n}{np}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{U}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{p}{,} \PY{n}{V}\PY{p}{[}\PY{n}{j}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}
+                \PY{n}{error} \PY{o}{+}\PY{o}{=} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{p}{(}\PY{p}{(}\PY{n}{Yij} \PY{o}{\PYZhy{}} \PY{n}{mu}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{U}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{p}{,} \PY{n}{V}\PY{p}{[}\PY{n}{j}\PY{p}{,}\PY{p}{:}\PY{p}{]}\PY{p}{)} \PY{o}{+} \PY{n}{a}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{+} \PY{n}{b}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}
         
             \PY{k}{return} \PY{n}{error} \PY{o}{/} \PY{n+nb}{len}\PY{p}{(}\PY{n}{Y}\PY{p}{)} \PY{c+c1}{\PYZsh{} mean error}
         
-        \PY{k}{def} \PY{n+nf}{train\PYZus{}model}\PY{p}{(}\PY{n}{M}\PY{p}{,} \PY{n}{N}\PY{p}{,} \PY{n}{K}\PY{p}{,} \PY{n}{eta}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{eps}\PY{o}{=}\PY{l+m+mf}{0.0001}\PY{p}{,} \PY{n}{max\PYZus{}epochs}\PY{o}{=}\PY{l+m+mi}{300}\PY{p}{)}\PY{p}{:}
+        \PY{k}{def} \PY{n+nf}{train\PYZus{}model}\PY{p}{(}\PY{n}{M}\PY{p}{,} \PY{n}{N}\PY{p}{,} \PY{n}{K}\PY{p}{,} \PY{n}{eta}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{mu}\PY{p}{,} \PY{n}{eps}\PY{o}{=}\PY{l+m+mf}{0.0001}\PY{p}{,} \PY{n}{max\PYZus{}epochs}\PY{o}{=}\PY{l+m+mi}{300}\PY{p}{)}\PY{p}{:}
             \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
         \PY{l+s+sd}{    Given a training data matrix Y containing rows (i, j, Y\PYZus{}ij)}
-        \PY{l+s+sd}{    where Y\PYZus{}ij is user i\PYZsq{}s rating on movie j, learns an}
-        \PY{l+s+sd}{    M x K matrix U and N x K matrix V such that rating Y\PYZus{}ij is approximated}
+        \PY{l+s+sd}{    where Y\PYZus{}ij is user i\PYZsq{}s rating on movie j, and mu is the average of all Y\PYZus{}ij,}
+        \PY{l+s+sd}{    learns an M x K matrix U and N x K matrix V such that rating Y\PYZus{}ij is approximated}
         \PY{l+s+sd}{    by (UV\PYZca{}T)\PYZus{}ij.}
         
         \PY{l+s+sd}{    Uses a learning rate of \PYZlt{}eta\PYZgt{} and regularization of \PYZlt{}reg\PYZgt{}. Stops after}
@@ -359,13 +392,15 @@ Cui
         \PY{l+s+sd}{    of the model.}
         \PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
             
-            \PY{c+c1}{\PYZsh{} initialize entries of U and V uniformly and randomly in [\PYZhy{}0.5, 0.5]}
+            \PY{c+c1}{\PYZsh{} initialize entries of U, V, a, b uniformly and randomly in [\PYZhy{}0.5, 0.5]}
             \PY{n}{U} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{rand}\PY{p}{(}\PY{n}{M}\PY{p}{,} \PY{n}{K}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{ones}\PY{p}{(}\PY{p}{[}\PY{n}{M}\PY{p}{,} \PY{n}{K}\PY{p}{]}\PY{p}{)}
             \PY{n}{V} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{rand}\PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{K}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mf}{0.5}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{ones}\PY{p}{(}\PY{p}{[}\PY{n}{N}\PY{p}{,} \PY{n}{K}\PY{p}{]}\PY{p}{)}
+            \PY{n}{a} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{[}\PY{n}{M}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)} \PY{c+c1}{\PYZsh{} corresponds to users}
+            \PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{[}\PY{n}{N}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)} \PY{c+c1}{\PYZsh{} corresponds to movies}
             
             \PY{n}{epochs} \PY{o}{=} \PY{l+m+mi}{0}
             \PY{n}{rel\PYZus{}red} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{inf}
-            \PY{n}{err} \PY{o}{=} \PY{n}{get\PYZus{}err}\PY{p}{(}\PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{Y}\PY{p}{)}
+            \PY{n}{err} \PY{o}{=} \PY{n}{get\PYZus{}err}\PY{p}{(}\PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{mu}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{reg}\PY{p}{)}
             
             \PY{k}{while} \PY{n}{epochs} \PY{o}{\PYZlt{}} \PY{n}{max\PYZus{}epochs} \PY{o+ow}{and} \PY{n}{rel\PYZus{}red} \PY{o}{\PYZgt{}} \PY{n}{eps}\PY{p}{:}
                 \PY{c+c1}{\PYZsh{} store previous error}
@@ -381,12 +416,17 @@ Cui
                     \PY{n}{Yij} \PY{o}{=} \PY{n}{Y}\PY{p}{[}\PY{n}{o}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}
                     \PY{n}{Ui} \PY{o}{=} \PY{n}{U}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]}
                     \PY{n}{Vj} \PY{o}{=} \PY{n}{V}\PY{p}{[}\PY{n}{j}\PY{p}{,}\PY{p}{:}\PY{p}{]}
+                    \PY{n}{ai} \PY{o}{=} \PY{n}{a}\PY{p}{[}\PY{n}{i}\PY{p}{]}
+                    \PY{n}{bj} \PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{n}{j}\PY{p}{]}
                     
-                    \PY{n}{U}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{grad\PYZus{}U}\PY{p}{(}\PY{n}{Ui}\PY{p}{,} \PY{n}{Yij}\PY{p}{,} \PY{n}{Vj}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{eta}\PY{p}{)}
-                    \PY{n}{V}\PY{p}{[}\PY{n}{j}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{grad\PYZus{}V}\PY{p}{(}\PY{n}{Vj}\PY{p}{,} \PY{n}{Yij}\PY{p}{,} \PY{n}{Ui}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{eta}\PY{p}{)}
+                    \PY{c+c1}{\PYZsh{} update U, V, a, b}
+                    \PY{n}{U}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{grad\PYZus{}U}\PY{p}{(}\PY{n}{Ui}\PY{p}{,} \PY{n}{Yij}\PY{p}{,} \PY{n}{Vj}\PY{p}{,} \PY{n}{mu}\PY{p}{,} \PY{n}{ai}\PY{p}{,} \PY{n}{bj}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{eta}\PY{p}{)}
+                    \PY{n}{V}\PY{p}{[}\PY{n}{j}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{grad\PYZus{}V}\PY{p}{(}\PY{n}{Vj}\PY{p}{,} \PY{n}{Yij}\PY{p}{,} \PY{n}{Ui}\PY{p}{,} \PY{n}{mu}\PY{p}{,} \PY{n}{ai}\PY{p}{,} \PY{n}{bj}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{eta}\PY{p}{)}
+                    \PY{n}{a}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{grad\PYZus{}a}\PY{p}{(}\PY{n}{ai}\PY{p}{,} \PY{n}{Yij}\PY{p}{,} \PY{n}{mu}\PY{p}{,} \PY{n}{Ui}\PY{p}{,} \PY{n}{Vj}\PY{p}{,} \PY{n}{bj}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{eta}\PY{p}{)} 
+                    \PY{n}{b}\PY{p}{[}\PY{n}{j}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{grad\PYZus{}b}\PY{p}{(}\PY{n}{bj}\PY{p}{,} \PY{n}{Yij}\PY{p}{,} \PY{n}{mu}\PY{p}{,} \PY{n}{Ui}\PY{p}{,} \PY{n}{Vj}\PY{p}{,} \PY{n}{ai}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{eta}\PY{p}{)}
                     
                 \PY{c+c1}{\PYZsh{} compute error and loss reduction}
-                \PY{n}{err} \PY{o}{=} \PY{n}{get\PYZus{}err}\PY{p}{(}\PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{Y}\PY{p}{)}
+                \PY{n}{err} \PY{o}{=} \PY{n}{get\PYZus{}err}\PY{p}{(}\PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{mu}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{reg}\PY{p}{)}
                 \PY{n}{loss\PYZus{}red} \PY{o}{=} \PY{n}{err} \PY{o}{\PYZhy{}} \PY{n}{prev\PYZus{}err}
                 
                 \PY{c+c1}{\PYZsh{} store initial loss reduction for comparison}
@@ -396,59 +436,214 @@ Cui
                 \PY{c+c1}{\PYZsh{} compute relative loss reduction}
                 \PY{n}{rel\PYZus{}red} \PY{o}{=} \PY{n}{loss\PYZus{}red}\PY{o}{/}\PY{n}{init\PYZus{}red}
                 \PY{n}{epochs} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+                \PY{n+nb}{print}\PY{p}{(}\PY{n}{epochs}\PY{p}{)}
             
-            \PY{k}{return} \PY{p}{(}\PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{err}\PY{p}{)}
+            \PY{k}{return} \PY{p}{(}\PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{err}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}4}]:} \PY{c+c1}{\PYZsh{} factorize using SGD as in Homework 5}
-        \PY{n}{Y\PYZus{}train} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{loadtxt}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{./data/train2.txt}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)}
-        \PY{n}{Y\PYZus{}test} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{loadtxt}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{./data/test2.txt}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)}
-        
-        \PY{n}{M} \PY{o}{=} \PY{n+nb}{max}\PY{p}{(}\PY{n+nb}{max}\PY{p}{(}\PY{n}{Y\PYZus{}train}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n+nb}{max}\PY{p}{(}\PY{n}{Y\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)} \PY{c+c1}{\PYZsh{} users}
-        \PY{n}{N} \PY{o}{=} \PY{n+nb}{max}\PY{p}{(}\PY{n+nb}{max}\PY{p}{(}\PY{n}{Y\PYZus{}train}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n+nb}{max}\PY{p}{(}\PY{n}{Y\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)} \PY{c+c1}{\PYZsh{} movies}
-        \PY{n}{k} \PY{o}{=} \PY{l+m+mi}{20}
-        
-        \PY{n}{regs} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{10}\PY{o}{*}\PY{o}{*}\PY{o}{\PYZhy{}}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{10}\PY{o}{*}\PY{o}{*}\PY{o}{\PYZhy{}}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{10}\PY{o}{*}\PY{o}{*}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{10}\PY{o}{*}\PY{o}{*}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mf}{0.3}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{,} \PY{l+m+mf}{0.7}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}
-        \PY{n}{eta} \PY{o}{=} \PY{l+m+mf}{0.03} \PY{c+c1}{\PYZsh{} learning rate}
-        \PY{n}{E\PYZus{}ins} \PY{o}{=} \PY{p}{[}\PY{p}{]}
-        \PY{n}{E\PYZus{}outs} \PY{o}{=} \PY{p}{[}\PY{p}{]}
-        
-        \PY{c+c1}{\PYZsh{} Use to compute Ein and Eout}
-        \PY{k}{for} \PY{n}{reg} \PY{o+ow}{in} \PY{n}{regs}\PY{p}{:}
-        
-            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training model with M = }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{, N = }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{, k = }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{, eta = }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{, reg = }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{\PYZdq{}}\PY{o}{\PYZpc{}}\PY{p}{(}\PY{n}{M}\PY{p}{,} \PY{n}{N}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{eta}\PY{p}{,} \PY{n}{reg}\PY{p}{)}\PY{p}{)}
-            \PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{e\PYZus{}in} \PY{o}{=} \PY{n}{train\PYZus{}model}\PY{p}{(}\PY{n}{M}\PY{p}{,} \PY{n}{N}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{eta}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{Y\PYZus{}train}\PY{p}{)}
-            \PY{n}{e\PYZus{}out} \PY{o}{=} \PY{n}{get\PYZus{}err}\PY{p}{(}\PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{Y\PYZus{}test}\PY{p}{)}
-        
-            \PY{n}{E\PYZus{}ins}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{e\PYZus{}in}\PY{p}{)}
-            \PY{n}{E\PYZus{}outs}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{e\PYZus{}out}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}106}]:} \PY{c+c1}{\PYZsh{} factorize using SGD as in Homework 5}
+          \PY{n}{Y\PYZus{}train} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{loadtxt}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{./data/train2.txt}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)}
+          \PY{n}{Y\PYZus{}test} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{loadtxt}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{./data/test2.txt}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)}
+          
+          \PY{n}{M} \PY{o}{=} \PY{n+nb}{max}\PY{p}{(}\PY{n+nb}{max}\PY{p}{(}\PY{n}{Y\PYZus{}train}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n+nb}{max}\PY{p}{(}\PY{n}{Y\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)} \PY{c+c1}{\PYZsh{} users}
+          \PY{n}{N} \PY{o}{=} \PY{n+nb}{max}\PY{p}{(}\PY{n+nb}{max}\PY{p}{(}\PY{n}{Y\PYZus{}train}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n+nb}{max}\PY{p}{(}\PY{n}{Y\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)} \PY{c+c1}{\PYZsh{} movies}
+          \PY{n}{k} \PY{o}{=} \PY{l+m+mi}{20}
+          \PY{n}{mu} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{Y\PYZus{}train}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}
+          
+          \PY{n}{regs} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{10}\PY{o}{*}\PY{o}{*}\PY{o}{\PYZhy{}}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{10}\PY{o}{*}\PY{o}{*}\PY{o}{\PYZhy{}}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{10}\PY{o}{*}\PY{o}{*}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{10}\PY{o}{*}\PY{o}{*}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mf}{0.3}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{,} \PY{l+m+mf}{0.7}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}
+          \PY{n}{eta} \PY{o}{=} \PY{l+m+mf}{0.03} \PY{c+c1}{\PYZsh{} learning rate}
+          \PY{n}{E\PYZus{}ins} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+          \PY{n}{E\PYZus{}outs} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+          
+          \PY{c+c1}{\PYZsh{} Use to compute Ein and Eout}
+          \PY{k}{for} \PY{n}{reg} \PY{o+ow}{in} \PY{n}{regs}\PY{p}{:}
+          
+              \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training model with M = }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{, N = }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{, k = }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{, eta = }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{, reg = }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{\PYZdq{}}\PY{o}{\PYZpc{}}\PY{p}{(}\PY{n}{M}\PY{p}{,} \PY{n}{N}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{eta}\PY{p}{,} \PY{n}{reg}\PY{p}{)}\PY{p}{)}
+              \PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{e\PYZus{}in}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{o}{=} \PY{n}{train\PYZus{}model}\PY{p}{(}\PY{n}{M}\PY{p}{,} \PY{n}{N}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{eta}\PY{p}{,} \PY{n}{reg}\PY{p}{,} \PY{n}{Y\PYZus{}train}\PY{p}{,} \PY{n}{mu}\PY{p}{)}
+              \PY{n}{e\PYZus{}out} \PY{o}{=} \PY{n}{get\PYZus{}err}\PY{p}{(}\PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{Y\PYZus{}test}\PY{p}{,} \PY{n}{mu}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{)}
+          
+              \PY{n}{E\PYZus{}ins}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{e\PYZus{}in}\PY{p}{)}
+              \PY{n}{E\PYZus{}outs}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{e\PYZus{}out}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 0.0001
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
 Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 0.001
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
 Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 0.01
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
 Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 0.1
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
 Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 0.3
+1
+2
+3
+4
 Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 0.5
+1
+2
+3
+4
+5
+6
 Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 0.7
+1
+2
+3
+4
+5
+6
+7
+8
 Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
+1
+2
+3
+4
+5
 
     \end{Verbatim}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}5}]:} \PY{c+c1}{\PYZsh{} Plot values of E\PYZus{}in across k for each value of lambda}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{regs}\PY{p}{,} \PY{n}{E\PYZus{}ins}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{regs}\PY{p}{,} \PY{n}{E\PYZus{}outs}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}E\PYZus{}}\PY{l+s+si}{\PYZob{}in\PYZcb{}}\PY{l+s+s1}{\PYZdl{} and \PYZdl{}E\PYZus{}}\PY{l+s+si}{\PYZob{}out\PYZcb{}}\PY{l+s+s1}{\PYZdl{} vs. \PYZdl{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{lambda\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{lambda\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}E\PYZus{}}\PY{l+s+si}{\PYZob{}in\PYZcb{}}\PY{l+s+s1}{\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}E\PYZus{}}\PY{l+s+si}{\PYZob{}out\PYZcb{}}\PY{l+s+s1}{\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}1\PYZus{}reg.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}107}]:} \PY{c+c1}{\PYZsh{} Plot values of E\PYZus{}in across k for each value of lambda}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{regs}\PY{p}{,} \PY{n}{E\PYZus{}ins}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{regs}\PY{p}{,} \PY{n}{E\PYZus{}outs}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}E\PYZus{}}\PY{l+s+si}{\PYZob{}in\PYZcb{}}\PY{l+s+s1}{\PYZdl{} and \PYZdl{}E\PYZus{}}\PY{l+s+si}{\PYZob{}out\PYZcb{}}\PY{l+s+s1}{\PYZdl{} vs. \PYZdl{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{lambda\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{lambda\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}E\PYZus{}}\PY{l+s+si}{\PYZob{}in\PYZcb{}}\PY{l+s+s1}{\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}E\PYZus{}}\PY{l+s+si}{\PYZob{}out\PYZcb{}}\PY{l+s+s1}{\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}reg.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
 \end{Verbatim}
 
 
@@ -458,7 +653,23 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
     { \hspace*{\fill} \\}
     
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}52}]:} \PY{c+c1}{\PYZsh{} load data from cleaned files}
+{\color{incolor}In [{\color{incolor}108}]:} \PY{n}{E\PYZus{}outs}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}108}]:} [array([0.66362068]),
+           array([0.65544063]),
+           array([0.63991869]),
+           array([0.4225576]),
+           array([0.45544683]),
+           array([0.46507973]),
+           array([0.47208135]),
+           array([0.4877622])]
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{c+c1}{\PYZsh{} load data from cleaned files}
          \PY{n}{movies} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{data/movies.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
          \PY{n}{data} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{data/data.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)}
          \PY{n}{train\PYZus{}data} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{loadtxt}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{./data/data2.txt}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)}
@@ -466,11 +677,10 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}66}]:} \PY{c+c1}{\PYZsh{} train using best lambda on entire dataset}
+{\color{incolor}In [{\color{incolor}95}]:} \PY{c+c1}{\PYZsh{} train using best lambda on entire dataset}
          \PY{n}{M} \PY{o}{=} \PY{n+nb}{max}\PY{p}{(}\PY{n}{data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{User}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)} \PY{c+c1}{\PYZsh{} users}
          \PY{n}{N} \PY{o}{=} \PY{n+nb}{max}\PY{p}{(}\PY{n}{data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Movie}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)} \PY{c+c1}{\PYZsh{} movies}
-         
-         \PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{e\PYZus{}in} \PY{o}{=} \PY{n}{train\PYZus{}model}\PY{p}{(}\PY{n}{M}\PY{p}{,} \PY{n}{N}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{eta}\PY{p}{,} \PY{l+m+mf}{0.1}\PY{p}{,} \PY{n}{train\PYZus{}data}\PY{p}{)}
+         \PY{n}{U}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{e\PYZus{}in}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b} \PY{o}{=} \PY{n}{train\PYZus{}model}\PY{p}{(}\PY{n}{M}\PY{p}{,} \PY{n}{N}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{eta}\PY{p}{,} \PY{l+m+mf}{0.1}\PY{p}{,} \PY{n}{train\PYZus{}data}\PY{p}{,} \PY{n}{mu}\PY{p}{)}
          
          \PY{c+c1}{\PYZsh{} note that U is Mxk and V is Nxk, so we transpose them to be consistent}
          \PY{c+c1}{\PYZsh{} with the convention used in the Miniproject 2 pdf}
@@ -480,7 +690,40 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}67}]:} \PY{c+c1}{\PYZsh{} mean\PYZhy{}centering }
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}96}]:} \PY{c+c1}{\PYZsh{} mean\PYZhy{}centering }
          \PY{n}{V\PYZus{}mean} \PY{o}{=} \PY{n}{V}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:}
              \PY{n}{V}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{i}\PY{p}{]} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{V\PYZus{}mean}
@@ -493,7 +736,7 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}68}]:} \PY{c+c1}{\PYZsh{} project U, V into K\PYZhy{}dimensional space}
+{\color{incolor}In [{\color{incolor}97}]:} \PY{c+c1}{\PYZsh{} project U, V into K\PYZhy{}dimensional space}
          \PY{n}{K} \PY{o}{=} \PY{l+m+mi}{2}
          \PY{n}{U\PYZus{}tilde} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matmul}\PY{p}{(}\PY{n}{A}\PY{o}{.}\PY{n}{T}\PY{p}{[}\PY{p}{:}\PY{n}{K}\PY{p}{]}\PY{p}{,} \PY{n}{U}\PY{p}{)}
          \PY{n}{V\PYZus{}tilde} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{matmul}\PY{p}{(}\PY{n}{A}\PY{o}{.}\PY{n}{T}\PY{p}{[}\PY{p}{:}\PY{n}{K}\PY{p}{]}\PY{p}{,} \PY{n}{V}\PY{p}{)}
@@ -501,7 +744,7 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}76}]:} \PY{c+c1}{\PYZsh{} visualize any 10 movies}
+{\color{incolor}In [{\color{incolor}98}]:} \PY{c+c1}{\PYZsh{} visualize any 10 movies}
          \PY{n}{ids} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{11}\PY{p}{,} \PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{71}\PY{p}{,} \PY{l+m+mi}{95}\PY{p}{,} \PY{l+m+mi}{98}\PY{p}{,} \PY{l+m+mi}{92}\PY{p}{,} \PY{l+m+mi}{578}\PY{p}{,} \PY{l+m+mi}{181}\PY{p}{,} \PY{l+m+mi}{172}\PY{p}{,} \PY{l+m+mi}{50}\PY{p}{]}
          
          \PY{n}{titles} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Seven}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Usual Suspects}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Lion King}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aladdin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Silence of the Lambs}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{True Romance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Piano}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Return of the Jedi}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Empire Strikes Back}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Star Wars}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}   
@@ -521,17 +764,9 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}1\PYZus{}a.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_9_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}78}]:} \PY{c+c1}{\PYZsh{} run k\PYZhy{}means to cluster points}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}a.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} run k\PYZhy{}means to cluster points}
          \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{cluster} \PY{k}{import} \PY{n}{KMeans}
          
          \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{column\PYZus{}stack}\PY{p}{(}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)}
@@ -546,17 +781,48 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}1\PYZus{}a\PYZus{}clusters.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}a\PYZus{}clusters.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} visualize movies by their average ratings}
+         \PY{n}{ratings} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+         \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{ids}\PY{p}{:}
+             \PY{n}{ratings}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{avg\PYZus{}rating}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+         
+         \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{ratings}\PY{p}{)}
+         
+         \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
+             \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+             
+         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}a\PYZus{}ratings.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{colorbar}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}98}]:} <matplotlib.colorbar.Colorbar at 0x194001783c8>
+\end{Verbatim}
+            
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_10_0.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_10_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_10_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_10_3.png}
     \end{center}
     { \hspace*{\fill} \\}
     
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}71}]:} \PY{c+c1}{\PYZsh{} visualize 10 most popular movies}
+{\color{incolor}In [{\color{incolor}99}]:} \PY{c+c1}{\PYZsh{} visualize 10 most popular movies}
          \PY{n}{pop} \PY{o}{=} \PY{n}{data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Movie}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{o}{.}\PY{n}{index}
          
          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{pop}\PY{p}{:}
@@ -584,7 +850,7 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Most Popular Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}1\PYZus{}b.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}b.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
          
          \PY{c+c1}{\PYZsh{} plot clusters}
          \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
@@ -596,7 +862,24 @@ Training model with M = 943, N = 1664, k = 20, eta = 0.03, reg = 1
          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Most Popular Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}1\PYZus{}b\PYZus{}clusters.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}b\PYZus{}clusters.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} visualize movies by their average ratings}
+         \PY{n}{ratings} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+         \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{pop}\PY{p}{:}
+             \PY{n}{ratings}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{avg\PYZus{}rating}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+         
+         \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{ratings}\PY{p}{)}
+         
+         \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
+             \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+             
+         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Most Popular Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}b\PYZus{}ratings.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{colorbar}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
@@ -624,61 +907,87 @@ Name: Title, dtype: object
 
     \end{Verbatim}
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_1.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}99}]:} <matplotlib.colorbar.Colorbar at 0x194023745f8>
+\end{Verbatim}
+            
     \begin{center}
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_2.png}
     \end{center}
     { \hspace*{\fill} \\}
     
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_3.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_4.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}72}]:} \PY{c+c1}{\PYZsh{} visualize 10 best movies}
-         \PY{n}{sorted\PYZus{}df} \PY{o}{=} \PY{n}{movies}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{avg\PYZus{}rating}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
-         \PY{n}{best} \PY{o}{=} \PY{n}{sorted\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-         
-         \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{best}\PY{p}{:}
-             \PY{n+nb}{print}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-             
-         \PY{n}{titles} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Someone Else}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{s America}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Prefontaine}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aiqing wansui}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Star Kid}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Entertaining Angels: The Dorothy Day Story}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{They Made Me a Criminal}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Marlene Dietrich: Shadow and Light}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A Great Day in Harlem}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Saint of Fort Washington}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Santa With Muscles}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}   
-             
-         \PY{n}{x} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
-         \PY{n}{y} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
-         \PY{n}{count} \PY{o}{=} \PY{l+m+mi}{0}
-         \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{best}\PY{p}{:}
-             \PY{n}{x}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
-             \PY{n}{y}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
-             \PY{n}{count} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
-         
-         \PY{c+c1}{\PYZsh{} clustering}
-         \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{column\PYZus{}stack}\PY{p}{(}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)}
-         \PY{n}{labels} \PY{o}{=} \PY{n}{KMeans}\PY{p}{(}\PY{n}{n\PYZus{}clusters}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{fit\PYZus{}predict}\PY{p}{(}\PY{n}{X}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} plot visualization}
-         \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
-         
-         \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
-             
-         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Best Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}1\PYZus{}c.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} plot clusters}
-         \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{labels}\PY{p}{)}
-         
-         \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
-             
-         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Best Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}1\PYZus{}c\PYZus{}clusters.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}100}]:} \PY{c+c1}{\PYZsh{} visualize 10 best movies}
+          \PY{n}{sorted\PYZus{}df} \PY{o}{=} \PY{n}{movies}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{avg\PYZus{}rating}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+          \PY{n}{best} \PY{o}{=} \PY{n}{sorted\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+          
+          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{best}\PY{p}{:}
+              \PY{n+nb}{print}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+              
+          \PY{n}{titles} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Someone Else}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{s America}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Prefontaine}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aiqing wansui}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Star Kid}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Entertaining Angels: The Dorothy Day Story}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{They Made Me a Criminal}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Marlene Dietrich: Shadow and Light}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A Great Day in Harlem}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Saint of Fort Washington}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Santa With Muscles}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}   
+              
+          \PY{n}{x} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
+          \PY{n}{y} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
+          \PY{n}{count} \PY{o}{=} \PY{l+m+mi}{0}
+          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{best}\PY{p}{:}
+              \PY{n}{x}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+              \PY{n}{y}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+              \PY{n}{count} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+          
+          \PY{c+c1}{\PYZsh{} clustering}
+          \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{column\PYZus{}stack}\PY{p}{(}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)}
+          \PY{n}{labels} \PY{o}{=} \PY{n}{KMeans}\PY{p}{(}\PY{n}{n\PYZus{}clusters}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{fit\PYZus{}predict}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+          
+          \PY{c+c1}{\PYZsh{} plot visualization}
+          \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
+              \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+              
+          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Best Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}c.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          
+          \PY{c+c1}{\PYZsh{} plot clusters}
+          \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{labels}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
+              \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+              
+          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Best Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}c\PYZus{}clusters.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          
+          \PY{c+c1}{\PYZsh{} visualize movies by their average ratings}
+          \PY{n}{ratings} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{best}\PY{p}{:}
+              \PY{n}{ratings}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{avg\PYZus{}rating}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+              
+          \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{ratings}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
+              \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+              
+          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Best Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}c\PYZus{}ratings.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{colorbar}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
@@ -706,62 +1015,88 @@ Name: Title, dtype: object
 
     \end{Verbatim}
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_12_1.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}100}]:} <matplotlib.colorbar.Colorbar at 0x194024ca828>
+\end{Verbatim}
+            
     \begin{center}
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_12_2.png}
     \end{center}
     { \hspace*{\fill} \\}
     
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_12_3.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_12_4.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}73}]:} \PY{c+c1}{\PYZsh{} Visualize 10 animated movies}
-         \PY{c+c1}{\PYZsh{} get all animated movies }
-         \PY{n}{animated} \PY{o}{=} \PY{n}{movies}\PY{p}{[}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Animation}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
-         
-         \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{animated}\PY{p}{:}
-             \PY{n+nb}{print}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-             
-         \PY{n}{titles} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Toy Story}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Lion King}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aladdin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Snow White and the Seven Dwarfs}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Heavy Metal}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Aristocats}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{All Dogs go to Heaven 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Wallace and Gromit}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Wrong Trousers}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A Grand Day Out}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}   
-             
-         \PY{n}{x} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
-         \PY{n}{y} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
-         \PY{n}{count} \PY{o}{=} \PY{l+m+mi}{0}
-         
-         \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{animated}\PY{p}{:}
-             \PY{n}{x}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
-             \PY{n}{y}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
-             \PY{n}{count} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
-             
-         \PY{c+c1}{\PYZsh{} clustering}
-         \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{column\PYZus{}stack}\PY{p}{(}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)}
-         \PY{n}{labels} \PY{o}{=} \PY{n}{KMeans}\PY{p}{(}\PY{n}{n\PYZus{}clusters}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{fit\PYZus{}predict}\PY{p}{(}\PY{n}{X}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} plot visualization}
-         \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
-         
-         \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
-             
-         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Animated Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}1\PYZus{}d\PYZus{}1.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} plot clusters}
-         \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{labels}\PY{p}{)}
-         
-         \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
-             
-         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Animated Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}1\PYZus{}d\PYZus{}1\PYZus{}clusters.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}101}]:} \PY{c+c1}{\PYZsh{} Visualize 10 animated movies}
+          \PY{c+c1}{\PYZsh{} get all animated movies }
+          \PY{n}{animated} \PY{o}{=} \PY{n}{movies}\PY{p}{[}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Animation}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{animated}\PY{p}{:}
+              \PY{n+nb}{print}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+              
+          \PY{n}{titles} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Toy Story}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Lion King}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aladdin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Snow White and the Seven Dwarfs}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Heavy Metal}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Aristocats}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{All Dogs go to Heaven 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Wallace and Gromit}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Wrong Trousers}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A Grand Day Out}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}   
+              
+          \PY{n}{x} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
+          \PY{n}{y} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
+          \PY{n}{count} \PY{o}{=} \PY{l+m+mi}{0}
+          
+          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{animated}\PY{p}{:}
+              \PY{n}{x}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+              \PY{n}{y}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+              \PY{n}{count} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+              
+          \PY{c+c1}{\PYZsh{} clustering}
+          \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{column\PYZus{}stack}\PY{p}{(}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)}
+          \PY{n}{labels} \PY{o}{=} \PY{n}{KMeans}\PY{p}{(}\PY{n}{n\PYZus{}clusters}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{fit\PYZus{}predict}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+          
+          \PY{c+c1}{\PYZsh{} plot visualization}
+          \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
+              \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+              
+          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Animated Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}d\PYZus{}1.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          
+          \PY{c+c1}{\PYZsh{} plot clusters}
+          \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{labels}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
+              \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+              
+          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Animated Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}d\PYZus{}1\PYZus{}clusters.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          
+          \PY{c+c1}{\PYZsh{} visualize movies by their average ratings}
+          \PY{n}{ratings} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{animated}\PY{p}{:}
+              \PY{n}{ratings}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{avg\PYZus{}rating}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+              
+          \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{ratings}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
+              \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+              
+          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Animated Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}d\PYZus{}1\PYZus{}ratings.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{colorbar}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
@@ -789,62 +1124,88 @@ Name: Title, dtype: object
 
     \end{Verbatim}
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_1.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}101}]:} <matplotlib.colorbar.Colorbar at 0x19402411390>
+\end{Verbatim}
+            
     \begin{center}
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_2.png}
     \end{center}
     { \hspace*{\fill} \\}
     
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_3.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_4.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}74}]:} \PY{c+c1}{\PYZsh{} Visualize 10 Western movies}
-         \PY{c+c1}{\PYZsh{} get all Western movies }
-         \PY{n}{western} \PY{o}{=} \PY{n}{movies}\PY{p}{[}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Western}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
-         
-         \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{western}\PY{p}{:}
-             \PY{n+nb}{print}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-             
-         \PY{n}{titles} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Legends of the Fall}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Maverick}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Dances with Wolves}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Good, The Bad, and The Ugly}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Unforgiven}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Young Guns}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Apple Dumpling Gang}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Butch Cassidy and the Sundance Kid}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Tombstone}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Magnificent Seven}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}   
-             
-         \PY{n}{x} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
-         \PY{n}{y} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
-         \PY{n}{count} \PY{o}{=} \PY{l+m+mi}{0}
-         
-         \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{western}\PY{p}{:}
-             \PY{n}{x}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
-             \PY{n}{y}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
-             \PY{n}{count} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
-         
-         \PY{c+c1}{\PYZsh{} clustering}
-         \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{column\PYZus{}stack}\PY{p}{(}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)}
-         \PY{n}{labels} \PY{o}{=} \PY{n}{KMeans}\PY{p}{(}\PY{n}{n\PYZus{}clusters}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{fit\PYZus{}predict}\PY{p}{(}\PY{n}{X}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} plot visualization}
-         \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
-         
-         \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
-             
-         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Western Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}1\PYZus{}d\PYZus{}2.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} plot clusters}
-         \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{labels}\PY{p}{)}
-         
-         \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
-             
-         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Western Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}1\PYZus{}d\PYZus{}2\PYZus{}clusters.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}104}]:} \PY{c+c1}{\PYZsh{} Visualize 10 Western movies}
+          \PY{c+c1}{\PYZsh{} get all Western movies }
+          \PY{n}{western} \PY{o}{=} \PY{n}{movies}\PY{p}{[}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Western}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{western}\PY{p}{:}
+              \PY{n+nb}{print}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+              
+          \PY{n}{titles} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Legends of the Fall}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Maverick}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Dances with Wolves}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Good, The Bad, and The Ugly}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Unforgiven}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Young Guns}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Apple Dumpling Gang}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Butch Cassidy and the Sundance Kid}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Tombstone}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Magnificent Seven}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}   
+              
+          \PY{n}{x} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
+          \PY{n}{y} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
+          \PY{n}{count} \PY{o}{=} \PY{l+m+mi}{0}
+          
+          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{western}\PY{p}{:}
+              \PY{n}{x}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+              \PY{n}{y}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+              \PY{n}{count} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+          
+          \PY{c+c1}{\PYZsh{} clustering}
+          \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{column\PYZus{}stack}\PY{p}{(}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)}
+          \PY{n}{labels} \PY{o}{=} \PY{n}{KMeans}\PY{p}{(}\PY{n}{n\PYZus{}clusters}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{fit\PYZus{}predict}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+          
+          \PY{c+c1}{\PYZsh{} plot visualization}
+          \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
+              \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+              
+          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Western Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}d\PYZus{}2.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          
+          \PY{c+c1}{\PYZsh{} plot clusters}
+          \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{labels}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
+              \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+              
+          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Western Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}d\PYZus{}2\PYZus{}clusters.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          
+          \PY{c+c1}{\PYZsh{} visualize movies by their average ratings}
+          \PY{n}{ratings} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{western}\PY{p}{:}
+              \PY{n}{ratings}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{avg\PYZus{}rating}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+              
+          \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{ratings}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
+              \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+              
+          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Western Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}d\PYZus{}2\PYZus{}ratings.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{colorbar}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
@@ -872,61 +1233,87 @@ Name: Title, dtype: object
 
     \end{Verbatim}
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_14_1.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}104}]:} <matplotlib.colorbar.Colorbar at 0x194022b8438>
+\end{Verbatim}
+            
     \begin{center}
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_14_2.png}
     \end{center}
     { \hspace*{\fill} \\}
     
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_14_3.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_14_4.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}64}]:} \PY{c+c1}{\PYZsh{} Visualize 10 horror movies}
-         \PY{n}{horror} \PY{o}{=} \PY{n}{movies}\PY{p}{[}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Horror}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
-         
-         \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{horror}\PY{p}{:}
-             \PY{n+nb}{print}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-             
-         \PY{n}{titles} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{From Dusk Till Dawn}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Robert A. Heinlein}\PY{l+s+s1}{\PYZdq{}}\PY{l+s+s1}{s The Puppet Masters}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Heavy Metal}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Frighteners}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Alien}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Army of Darkness}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Psycho}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Shining}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Evil Dead II}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Young Frankenstein}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}   
-             
-         \PY{n}{x} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
-         \PY{n}{y} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
-         \PY{n}{count} \PY{o}{=} \PY{l+m+mi}{0}
-         
-         \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{horror}\PY{p}{:}
-             \PY{n}{x}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
-             \PY{n}{y}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
-             \PY{n}{count} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
-             
-         \PY{c+c1}{\PYZsh{} clustering}
-         \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{column\PYZus{}stack}\PY{p}{(}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)}
-         \PY{n}{labels} \PY{o}{=} \PY{n}{KMeans}\PY{p}{(}\PY{n}{n\PYZus{}clusters}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{fit\PYZus{}predict}\PY{p}{(}\PY{n}{X}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} plot visualization}
-         \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
-         
-         \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
-             
-         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Horror Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}1\PYZus{}d\PYZus{}3\PYZus{}.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} plot clusters}
-         \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{labels}\PY{p}{)}
-         
-         \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
-             
-         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Horror Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}1\PYZus{}d\PYZus{}3\PYZus{}clusters.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}103}]:} \PY{c+c1}{\PYZsh{} Visualize 10 horror movies}
+          \PY{n}{horror} \PY{o}{=} \PY{n}{movies}\PY{p}{[}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Horror}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{horror}\PY{p}{:}
+              \PY{n+nb}{print}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ID}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+              
+          \PY{n}{titles} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{From Dusk Till Dawn}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Robert A. Heinlein}\PY{l+s+s1}{\PYZdq{}}\PY{l+s+s1}{s The Puppet Masters}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Heavy Metal}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Frighteners}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Alien}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Army of Darkness}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Psycho}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{The Shining}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Evil Dead II}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Young Frankenstein}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}   
+              
+          \PY{n}{x} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
+          \PY{n}{y} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}
+          \PY{n}{count} \PY{o}{=} \PY{l+m+mi}{0}
+          
+          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{horror}\PY{p}{:}
+              \PY{n}{x}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+              \PY{n}{y}\PY{p}{[}\PY{n}{count}\PY{p}{]} \PY{o}{=} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+              \PY{n}{count} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+              
+          \PY{c+c1}{\PYZsh{} clustering}
+          \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{column\PYZus{}stack}\PY{p}{(}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)}
+          \PY{n}{labels} \PY{o}{=} \PY{n}{KMeans}\PY{p}{(}\PY{n}{n\PYZus{}clusters}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{o}{.}\PY{n}{fit\PYZus{}predict}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+          
+          \PY{c+c1}{\PYZsh{} plot visualization}
+          \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
+              \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+              
+          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Horror Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}d\PYZus{}3\PYZus{}.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          
+          \PY{c+c1}{\PYZsh{} plot clusters}
+          \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{labels}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
+              \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+              
+          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Horror Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}d\PYZus{}3\PYZus{}clusters.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          
+          \PY{c+c1}{\PYZsh{} visualize movies by their average ratings}
+          \PY{n}{ratings} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{horror}\PY{p}{:}
+              \PY{n}{ratings}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{avg\PYZus{}rating}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+              
+          \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{ratings}\PY{p}{)}
+          
+          \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{txt} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{titles}\PY{p}{)}\PY{p}{:}
+              \PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{txt}\PY{p}{,} \PY{p}{(}\PY{n}{x}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+              
+          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of 10 Horror Movies}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}2\PYZus{}d\PYZus{}3\PYZus{}ratings.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{colorbar}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
@@ -954,13 +1341,48 @@ Name: Title, dtype: object
 
     \end{Verbatim}
 
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}103}]:} <matplotlib.colorbar.Colorbar at 0x194000a97f0>
+\end{Verbatim}
+            
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_1.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_2.png}
     \end{center}
     { \hspace*{\fill} \\}
     
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_2.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_3.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_4.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}105}]:} \PY{c+c1}{\PYZsh{} visualization of all movies by average rating }
+          \PY{n}{ratings} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{movies}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+              \PY{n}{ratings}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{movies}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{avg\PYZus{}rating}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}
+              
+          \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{V\PYZus{}tilde}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{n}{ratings}\PY{p}{)}
+              
+          \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visualization of All Movies by Average Rating}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{matrix\PYZus{}1\PYZus{}avg\PYZus{}rating.png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+          \PY{n}{plt}\PY{o}{.}\PY{n}{colorbar}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}105}]:} <matplotlib.colorbar.Colorbar at 0x1940268bc18>
+\end{Verbatim}
+            
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_16_1.png}
     \end{center}
     { \hspace*{\fill} \\}
     
